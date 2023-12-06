@@ -4,96 +4,131 @@
   <title>艺术生综合分计算器</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      text-align: center;
-      margin-top: 50px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f7f7f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    
-    h1 {
+
+    .calculator {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 90%;
+    }
+
+    .calculator h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
       color: #333;
+      text-align: center;
     }
-    
-    label {
-      display: inline-block;
-      width: 150px;
-      margin-bottom: 10px;
-      text-align: right;
-    }
-    
-    select,
-    input {
-      padding: 8px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 20px;
     }
-    
-    button {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #4CAF50;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+
+    .input-group label {
+      flex: 1;
+      margin-right: 10px;
+      font-size: 16px;
     }
-    
+
+    .input-group input {
+      flex: 2;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    select,
+    button {
+      padding: 12px;
+      border-radius: 5px;
+      border: none;
+      width: 100%;
+      margin-bottom: 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+    }
+
     button:hover {
       background-color: #45a049;
     }
-    
-    #result {
-      font-size: 24px;
+
+    p {
       font-weight: bold;
+      font-size: 18px;
+      margin-top: 10px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <h1>艺术生综合分计算器</h1>
-  
-  <label for="major">选择专业：</label>
-  <select id="major">
-    <option value="art">艺术专业</option>
-    <option value="music">音乐专业</option>
-    <option value="dance">舞蹈专业</option>
-  </select><br>
-  
-  <label for="majorScore">专业成绩：</label>
-  <input type="number" id="majorScore"><br>
-  
-  <label for="culturalScore">文化成绩：</label>
-  <input type="number" id="culturalScore"><br>
-  
-  <button onclick="calculateScore()">计算综合分</button><br>
-  
-  <p>综合分：<span id="result"></span></p>
-  
+  <div class="calculator">
+    <h1>艺术生综合分计算器</h1>
+    <div class="input-group">
+      <label for="cultureScore">文化分：</label>
+      <input type="number" id="cultureScore">
+    </div>
+
+    <div class="input-group">
+      <label for="majorScore">专业分：</label>
+      <input type="number" id="majorScore">
+    </div>
+
+    <select id="selectMajor">
+      <option value="art">美术与设计类</option>
+      <option value="music">音乐类</option>
+      <option value="dance">舞蹈类</option>
+      <option value="performance">表（导）演类</option>
+      <option value="calligraphy">书法类</option>
+      <option value="broadcasting">播音与主持类</option>
+    </select>
+
+    <button onclick="calculateScore()">计算</button>
+
+    <p>综合分：<span id="result"></span></p>
+  </div>
+
   <script>
     function calculateScore() {
-      var major = document.getElementById('major').value;
-      var majorScore = parseFloat(document.getElementById('majorScore').value);
-      var culturalScore = parseFloat(document.getElementById('culturalScore').value);
-      
-      var majorWeight = 0; // 默认比重
-      
-      // 根据不同专业设置不同比重
-      if (major === 'art') {
-        majorWeight = 0.7;
-      } else if (major === 'music') {
-        majorWeight = 0.6;
-      } else if (major === 'dance') {
-        majorWeight = 0.8;
+      const cultureScore = parseFloat(document.getElementById('cultureScore').value);
+      let majorScore = parseFloat(document.getElementById('majorScore').value);
+      const selectedMajor = document.getElementById('selectMajor').value;
+
+      // Check if major score exceeds 300
+      if (majorScore > 300) {
+        alert("专业分数不能高于300");
+        document.getElementById('majorScore').value = ''; // Clear the input field
+        return;
       }
-      
-      var culturalWeight = 1 - majorWeight; // 文化比重
-      
-      // 计算综合分
-      var totalScore = (majorScore * majorWeight) + (culturalScore * culturalWeight);
-      
-      // 将结果显示在页面上
-      document.getElementById('result').innerText = totalScore.toFixed(2);
+
+      let compositeScore = 0;
+
+      if (selectedMajor !== 'broadcasting') {
+        compositeScore = cultureScore * 0.5 + majorScore * 1.25;
+      } else {
+        compositeScore = cultureScore * 0.7 + majorScore * 0.75;
+      }
+
+      document.getElementById('result').innerText = compositeScore;
     }
   </script>
 </body>
